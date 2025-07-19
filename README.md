@@ -1,34 +1,73 @@
 # Laravel API Project
 
-A Laravel 11 application providing RESTful APIs for User Registration, Blog Post Management, and Task Management.
-
----
+Laravel 11 REST API implementing 3 core functionalities: User Registration, Blog Post CRUD, and Task Management.
 
 ## 🚀 Features
 
-- 🔐 **User Registration API**: Secure registration with validation
-- 📝 **Blog Post CRUD API**: Full CRUD operations for blog posts
-- ✅ **Task Management API**: Create, update, and track task completion
+- **User Registration API**: POST `/api/register` with validation
+- **Blog Post CRUD API**: Full CRUD operations at `/api/posts`  
+- **Task Management API**: Create tasks and mark as completed
 
----
-
-## ⚡ Quick Start
+## ⚡ Quick Setup
 
 ```bash
-# Clone the repository
+# Clone and install
 git clone https://github.com/HasnathAhmedTamim/laravel--task.git
 cd laravel-app
-
-# Install dependencies
 composer install
 
-# Setup environment
+# Environment setup
 cp .env.example .env
 php artisan key:generate
 
-# Setup SQLite database
+# Database setup
 touch database/database.sqlite
 php artisan migrate
-
-# Start the development server
 php artisan serve
+```
+
+Access at: `http://127.0.0.1:8000`
+
+## 📋 API Endpoints
+
+### 1. User Registration
+```http
+POST /api/register
+Content-Type: application/json
+
+{
+  "name": "Jane Doe",
+  "email": "jane@example.com", 
+  "password": "password123"
+}
+```
+
+### 2. Blog Posts
+```http
+GET    /api/posts        # List all posts
+POST   /api/posts        # Create: {"title":"...", "content":"..."}
+GET    /api/posts/{id}   # View single post
+```
+
+### 3. Task Management  
+```http
+POST   /api/tasks        # Create: {"title": "Finish Laravel test"}
+PATCH  /api/tasks/{id}   # Update: {"is_completed": true}
+GET    /api/tasks/pending # Get incomplete tasks
+```
+
+## 🧪 Testing
+
+```bash
+# Run test scripts
+php test_api.php
+php test_task_api.php
+```
+
+## 🗄️ Database Tables
+
+- **users**: id, name, email, password, created_at
+- **posts**: id, title, content, created_at  
+- **tasks**: id, title, is_completed, created_at
+
+**Tech Stack**: Laravel 11 • SQLite • RESTful API
