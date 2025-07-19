@@ -26,25 +26,40 @@ class AuthController extends Controller
      */
     public function register(Request $request)
     {
-        // Validate the incoming request data
-        $validated = $request->validate([
-            'name' => 'required|min:3',                    // Name must be at least 3 characters
-            'email' => 'required|email|unique:users,email', // Email must be valid and unique
-            'password' => 'required|min:8',                // Password must be at least 8 characters
-        ]);
+        try {
+            // Validate the incoming request data
+            $validated = $request->validate([
+                'name' => 'required|min:3',                    // Name must be at least 3 characters
+                'email' => 'required|email|unique:users,email', // Email must be valid and unique
+                'password' => 'required|min:8',                // Password must be at least 8 characters
+            ]);
 
-        // Hash the password for secure storage
-        $validated['password'] = Hash::make($validated['password']);
-        
-        // Create the new user in the database
-        $user = User::create($validated);
-        
-        // Return the user data (excluding password) with 201 Created status
-        return response()->json([
-            'id' => $user->id,
-            'name' => $user->name,
-            'email' => $user->email,
-            'created_at' => $user->created_at,
-        ], 201);
+            // Hash the password for secure storage
+            $validated['password'] = Hash::make($validated['password']);
+            
+            // Create the new user in the database
+            $user = User::create($validated);
+            
+            // Return the user data (excluding password) with 201 Created status
+            return response()->json([
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'created_at' => $user->created_at,
+            ], 201);
+            
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // Return validation errors as JSON
+            return response()->json([
+                'message' => 'Validation failed',
+                'errors' => $e->errors()
+            ], 422);
+        } catch (\Exception $e) {
+            // Return any other errors as JSON
+            return response()->json([
+                'message' => 'Registration failed',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 }

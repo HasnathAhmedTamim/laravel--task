@@ -33,6 +33,10 @@ Route::delete('/posts/{id}', [BlogPostController::class, 'destroy']); // Delete 
 // ==========================================
 // Task Management Routes
 // ==========================================
+Route::get('/tasks', [TaskController::class, 'index']);            // Get all tasks
+Route::get('/tasks/pending', [TaskController::class, 'pending']);  // Get pending tasks (MUST be before {id})
 Route::post('/tasks', [TaskController::class, 'store']);           // Create new task
-Route::patch('/tasks/{id}', [TaskController::class, 'update']);    // Update task completion
-Route::get('/tasks/pending', [TaskController::class, 'pending']);  // Get pending tasks
+Route::get('/tasks/{id}', [TaskController::class, 'show']);        // Get single task
+Route::put('/tasks/{id}', [TaskController::class, 'update']);      // Update task (full)
+Route::patch('/tasks/{id}', [TaskController::class, 'update']);    // Update task (partial)
+Route::delete('/tasks/{id}', [TaskController::class, 'destroy']);  // Delete task

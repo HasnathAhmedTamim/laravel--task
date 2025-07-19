@@ -28,6 +28,7 @@ class TaskController extends Controller
         // Validate the incoming request - title is required
         $validated = $request->validate([
             'title' => 'required|string',
+            'description' => 'nullable|string',
         ]);
         
         // Create the new task (is_completed defaults to false)
@@ -38,10 +39,30 @@ class TaskController extends Controller
     }
 
     /**
-     * Update a task's completion status
+     * Get all tasks
      * 
-     * Finds the task by ID and updates its completion status.
-     * Typically used to mark tasks as completed or incomplete.
+     * @return \Illuminate\Http\JsonResponse JSON response with all tasks
+     */
+    public function index()
+    {
+        $tasks = Task::all();
+        return response()->json($tasks);
+    }
+
+    /**
+     * Get a single task by ID
+     * 
+     * @param int $id The ID of the task to retrieve
+     * @return \Illuminate\Http\JsonResponse JSON response with task data
+     */
+    public function show($id)
+    {
+        $task = Task::findOrFail($id);
+        return response()->json($task);
+    }
+
+    /**
+     * Update a task
      * 
      * @param Request $request The HTTP request containing update data
      * @param int $id The ID of the task to update
@@ -52,9 +73,11 @@ class TaskController extends Controller
         // Find the task or fail with 404 if not found
         $task = Task::findOrFail($id);
         
-        // Validate the completion status - must be boolean
+        // Validate the request data
         $validated = $request->validate([
-            'is_completed' => 'required|boolean'
+            'title' => 'sometimes|required|string',
+            'description' => 'sometimes|nullable|string',
+            'is_completed' => 'sometimes|required|boolean'
         ]);
         
         // Update the task with validated data
@@ -62,6 +85,20 @@ class TaskController extends Controller
         
         // Return the updated task data
         return response()->json($task);
+    }
+
+    /**
+     * Delete a task
+     * 
+     * @param int $id The ID of the task to delete
+     * @return \Illuminate\Http\JsonResponse JSON response confirming deletion
+     */
+    public function destroy($id)
+    {
+        $task = Task::findOrFail($id);
+        $task->delete();
+        
+        return response()->json(['message' => 'Task deleted successfully']);
     }
 
     /**

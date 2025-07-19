@@ -1,0 +1,51 @@
+POSTMAN SETUP GUIDE - User Registration API
+=============================================
+
+❌ WRONG SETUP (Causes 405 Method Not Allowed):
+- Method: GET  ← THIS IS THE PROBLEM!
+- URL: http://127.0.0.1:8000/api/register
+- Headers: (none)
+- Body: (none)
+- ERROR: "405 Method Not Allowed" or "The GET method is not supported"
+
+✅ CORRECT SETUP (Will work):
+- Method: POST  ← CHANGE THIS FROM GET TO POST!
+- URL: http://127.0.0.1:8000/api/register
+- Headers: Content-Type: application/json
+- Body (raw JSON): 
+  {
+    "name": "Jane Doe",
+    "email": "jane@example.com", 
+    "password": "password123"
+  }
+
+STEP-BY-STEP FIX IN POSTMAN:
+================================
+1. 🔍 FIND the method dropdown (shows "GET")
+2. 🖱️  CLICK the dropdown 
+3. ✅ SELECT "POST" from the list
+4. 📝 ADD Header: Content-Type = application/json
+5. 📄 CLICK "Body" tab
+6. 🔘 SELECT "raw" radio button
+7. 📋 SELECT "JSON" from format dropdown
+8. ✏️  PASTE the JSON data
+9. 🚀 CLICK "Send"
+
+EXPECTED SUCCESS RESPONSE:
+HTTP 201 Created
+{
+  "id": 1,
+  "name": "Jane Doe",
+  "email": "jane@example.com",
+  "created_at": "2025-07-20T..."
+}
+
+ALTERNATIVE - cURL Command (Copy & Paste):
+curl -X POST http://127.0.0.1:8000/api/register -H "Content-Type: application/json" -d "{\"name\":\"Jane Doe\",\"email\":\"jane@example.com\",\"password\":\"password123\"}"
+
+TROUBLESHOOTING:
+- 405 Method Not Allowed = You're using GET instead of POST
+- 500 Internal Server Error = Missing Content-Type header or invalid JSON
+- 422 Validation Error = Missing required fields or validation failed
+
+THE ONLY THING YOU NEED TO CHANGE: GET → POST!
